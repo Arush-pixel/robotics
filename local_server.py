@@ -30,6 +30,7 @@ def handle_client(client_socket, client_address):
             except Exception as e:
                 print(f"Error handling client {client_address}: {e}")
                 break
+            
 
 def start_server():
     try:
