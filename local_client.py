@@ -19,6 +19,8 @@ try:
         print(f"Server: {reply}")
         if not reply:
             break
+
+        
 finally:
     client_socket.close()
     print("Connection closed.")
