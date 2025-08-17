@@ -1,0 +1,62 @@
+// Define the pin connected to the IR sensor's output
+const int irSensorPin = 8;    
+
+// Define the pin connected to the LED
+const int ledPin = 13;        
+
+// Variable to store how many times an object was detected
+int detectionCount = 0;       
+
+// Variable to store the previous state of the IR sensor
+int previousState = HIGH;     
+
+// Function to check if a number is prime
+bool isPrime(int num) {
+  if (num <= 1) return false;           // 0 and 1 are not prime
+  if (num == 2) return true;            // 2 is the only even prime number
+  if (num % 2 == 0) return false;       // Eliminate even numbers greater than 2
+
+  // Check for divisibility from 3 up to the square root of the number
+  for (int i = 3; i <= sqrt(num); i += 2) {
+    if (num % i == 0) return false;     // Not prime if divisible
+  }
+
+  return true;                          // Number is prime
+}
+
+void setup() {
+  pinMode(irSensorPin, INPUT);          // Set the IR sensor pin as input
+  pinMode(ledPin, OUTPUT);              // Set the LED pin as output
+  Serial.begin(9600);                   // Begin serial communication at 9600 baud
+}
+
+void loop() {
+  
+  int sensorValue = digitalRead(irSensorPin);
+
+  
+  if (sensorValue == LOW) {
+    if (previousState == HIGH) {
+      detectionCount++;                // Increment detection counter
+
+     
+      // Check if the current count is a prime number
+      if (isPrime(detectionCount)) {
+        digitalWrite(ledPin, HIGH);    // Turn on the LED if it's a prime number
+        Serial.println(" (Prime) -> LED ON");  // Inform in serial
+         Serial.print("Object detected!  Count: "); // Print message
+      Serial.println(detectionCount);              // Print the count number
+
+      } else {
+        digitalWrite(ledPin, LOW);     // Turn off LED if not a prime number
+       
+      }
+    }
+  } else {
+    digitalWrite(ledPin, LOW);         // Turn off LED when no object is detected
+    //Serial.println("No object.");      // Inform in serial
+  }
+
+  previousState = sensorValue;         // Store current sensor value for next loop
+  delay(100);                          // Small delay to reduce flickering and bouncing
+}
